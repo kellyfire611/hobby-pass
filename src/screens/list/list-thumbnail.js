@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { ActivityIndicator  } from 'react-native';
 import {
   Container,
   Header,
@@ -56,7 +57,53 @@ const datas = [
 ];
 
 class NHListThumbnail extends Component {
+  constructor(props){
+    super(props);
+    this.state ={ isLoading: true }
+  }
+
+  componentDidMount(){
+    return fetch('http://api.hel.fi/linkedevents/v1/event/')
+      .then((response) => response.json())
+      .then((responseJson) => {
+
+        this.setState({
+          isLoading: false,
+          dataSource: responseJson.data,
+        }, function(){
+
+        });
+
+        console.log("Data", this.state.dataSource);
+      })
+      .catch((error) =>{
+        console.error(error);
+      });
+  }
+
   render() {
+    if(this.state.isLoading){
+      return(
+        <Container style={styles.container}>
+          <Header>
+            <Left>
+              <Button transparent onPress={() => this.props.navigation.goBack()}>
+                <Icon name="arrow-back" />
+              </Button>
+            </Left>
+            <Body>
+              <Title>List Events</Title>
+            </Body>
+            <Right />
+          </Header>
+
+          <Content>
+            <ActivityIndicator/>
+          </Content>
+        </Container>
+      )
+    }
+
     return (
       <Container style={styles.container}>
         <Header>
@@ -66,25 +113,25 @@ class NHListThumbnail extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>List Thumbnail</Title>
+            <Title>List Events</Title>
           </Body>
           <Right />
         </Header>
 
         <Content>
           <List
-            dataArray={datas}
+            dataArray={this.state.dataSource}
             renderRow={data =>
               <ListItem thumbnail>
                 <Left>
-                  <Thumbnail square source={data.img} />
+                  <Thumbnail square source={sankhadeep }/>
                 </Left>
                 <Body>
                   <Text>
-                    {data.text}
+                    {'Events 1'}
                   </Text>
                   <Text numberOfLines={1} note>
-                    {data.note}
+                    {data.description.en}
                   </Text>
                 </Body>
                 <Right>
