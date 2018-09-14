@@ -15,10 +15,10 @@ export default {
   },
   logo: {
     position: "absolute",
-    left: Platform.OS === "android" ? 40 : 50,
+    left: Platform.OS === "android" ? 70 : 80,
     top: Platform.OS === "android" ? 35 : 60,
     width: 280,
-    height: 100
+    height: 250
   },
   text: {
     color: "#D8D8D8",
